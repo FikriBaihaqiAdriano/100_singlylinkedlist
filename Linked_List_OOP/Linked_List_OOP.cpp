@@ -127,4 +127,16 @@ int main()
 	List mhs;
 	int nim;
 	char ch;
+	while (1)
+	{
+		cout << endl << "Menu";
+		cout << endl << "1. Menambah data kedalam list" << endl;
+		cout << "2. Menghapus data dari dalam list" << endl;
+		cout << "3. Menampilkan data dari dalam list" << endl;
+		cout << "4. Mencari data dlaam list" << endl;
+		cout << "5. keluar" << endl;
+		cout << "Masukkan pilihan (1-5): ";
+		cin >> ch;
+
+	}
 }
