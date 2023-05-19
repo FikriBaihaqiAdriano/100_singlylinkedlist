@@ -1,20 +1,201 @@
-// Linked_List_OOP.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <string.h>
+using namespace std;
+
+class Node
+{
+public:
+	int noMhs;
+	char nama[20];
+	Node* next;
+};
+
+class List
+{
+	Node* START;
+public:
+	List();
+	void addNode();
+	bool Search(int nim, Node** current, Node** previous);
+	bool listEmpty();
+	bool delNode(int element);
+	void traverse();
+};
+
+List::List()
+{
+	START = NULL;
+}
+void List::addNode()
+{
+	int nim;
+	char nm[20];
+	cout << "\nMasukkan Nomor Mahasiswa: ";
+	cin >> nim;
+	cout << "\nMasukkan Nama: ";
+	cin >> nm;
+
+	Node* nodeBaru = new Node;
+	nodeBaru->noMhs = nim;
+	strcpy_s(nodeBaru->nama, nm);
+
+	if (START == NULL || nim <= START->noMhs)
+	{
+		if ((START != NULL) && (nim == START->noMhs))
+		{
+			cout << "\nDuplikasi noMhs tidak diijinkan\n";
+			return;
+		}
+		nodeBaru->next == START;
+		START = nodeBaru;
+		return;
+	}
+	Node* previous, * current;
+	current = START;
+	previous = START; 
+
+
+	while ((current != NULL) && (nim >= current->noMhs))
+	{
+		if (nim == current->noMhs)
+		{
+			cout << "\nDuplikasi noMhs tidak diijinkan\n";
+			return;
+		}
+		previous = current;
+		current = current->next;
+
+
+	}
+	//*Jika loop diatas dieksekusi, previous dan current akan menempati posisi dimana
+	nodeBaru->next = current;
+	previous->next = nodeBaru;
+}
+
+bool List::listEmpty()
+{
+	if (START == NULL)
+		return true;
+	else
+		return false;
+}
+bool List::delNode(int nim) //*Menghapus node dari dalam list*/
+{
+	Node* current, * previous;
+	if (Search(nim, &previous, &current) == false)
+		return false;
+	previous->next = current->next;
+	if (current == START)
+		START = START->next;
+
+	delete current;
+	return true;
+}
+
+//*Check apakah node yang dimaksud ada didalam list atau tidak*/
+bool List::Search(int nim, Node** previous, Node** current)
+{
+	*previous = START;
+	*current = START;
+	while ((*current != NULL) && (nim != (*current)->noMhs))
+	{
+		*previous = *current;
+		*current = (*current)->next;
+	}
+	return (*current != NULL);
+}
+
+void List::traverse() //
+{
+
+	if (listEmpty())
+		cout << "\nList Kosong\n";
+	else
+	{
+		cout << endl << "Data didalam list adalah:" << endl;
+		Node* currentNode;
+		for (currentNode = START; currentNode != NULL; currentNode->next)
+		{
+			cout << currentNode->noMhs << "   " << currentNode->nama << "\n";
+		}
+		cout << endl;
+	}
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	List mhs;
+	int nim;
+	char ch;
+	while (1)
+	{
+		cout << endl << "Menu";
+		cout << endl << "1. Menambah data kedalam list" << endl;
+		cout << "2. Menghapus data dari dalam list" << endl;
+		cout << "3. Menampilkan data dari dalam list" << endl;
+		cout << "4. Mencari data dlaam list" << endl;
+		cout << "5. keluar" << endl;
+		cout << "Masukkan pilihan (1-5): ";
+		cin >> ch;
+		switch (ch)
+		{
+		case '1' :
+		{
+			mhs.addNode();
+		}
+		break;
+		case '2' :
+		{
+			if (mhs.listEmpty())
+			{
+				cout << endl << "List Kosong" << endl;
+				break;
+			}
+			cout << endl << "\nMasukkan no mahasiswa yang akan dihapus : ";
+			cin >> nim;
+			if (mhs.delNode(nim) == false)
+				cout << endl << "Data tidak ditemukan" << endl;
+			else
+				cout << endl << "Data dengan nomor mahasiswa " << nim << "berhasil dihapus" << endl;
+		}
+		break;
+		case '3' :
+		{
+			mhs.traverse();
+		}
+		break;
+
+		case '4' :
+		{
+			if (mhs.listEmpty() == true)
+			{
+				cout << "\nList kosong\n";
+				break;
+			}
+			Node* previous, * current;
+			cout << endl << "Masukkan no mahasiswa yang dicari : ";
+			cin >> nim;
+			if (mhs.Search(nim, &previous, &current) == false)
+				cout << endl << "Data tidak ditemukan" << endl;
+			else
+			{
+				cout << endl << "Data ditemukan" << endl;
+				cout << "\nNo Mahasiswa: " << current->noMhs;
+				cout << "\n\nNama: " << current->nama;
+				cout << "\n";
+			}
+		}
+		break;
+		case '5' :
+		{
+			exit(0);
+		}
+		break;
+		default:
+		{
+			cout << "Pilihan salah !." << endl;
+		}
+		break;
+		}
+	}
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
